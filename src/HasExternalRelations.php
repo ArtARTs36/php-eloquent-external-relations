@@ -19,7 +19,7 @@ trait HasExternalRelations
             throw new ExternalRelationNotFound($relationName);
         }
 
-        static::$externalRelationMap[$relationName] = $relationClass;
+        static::$externalRelationMap[static::class][$relationName] = $relationClass;
     }
 
     /**
@@ -28,17 +28,18 @@ trait HasExternalRelations
      */
     protected function getExternalRelationClass(string $relationName): string
     {
-        if (! array_key_exists($relationName, static::$externalRelationMap)) {
+        if (! array_key_exists($relationName, static::$externalRelationMap[static::class] ?? [])) {
             throw new ExternalRelationNotFound($relationName);
         }
 
-        return static::$externalRelationMap[$relationName];
+        return static::$externalRelationMap[static::class][$relationName];
     }
 
     /**
      * @throws ExternalRelationNotFound
+     * @return object
      */
-    protected function newExternalRelationInstance(string $relationName): string
+    protected function newExternalRelationInstance(string $relationName)
     {
         $class = $this->getExternalRelationClass($relationName);
 
